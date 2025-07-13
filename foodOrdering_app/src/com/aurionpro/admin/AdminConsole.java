@@ -1,143 +1,158 @@
 package com.aurionpro.admin;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.aurionpro.delivery.DeliveryManager;
+import com.aurionpro.delivery.IDeliveryAgent;
 import com.aurionpro.delivery.SwiggyAgent;
 import com.aurionpro.delivery.ZomatoAgent;
 import com.aurionpro.menu.FoodItem;
-import com.aurionpro.menu.FoodType;
+import com.aurionpro.menu.IFoodType;
+import com.aurionpro.menu.IMenuType;
 import com.aurionpro.menu.Menu;
-import com.aurionpro.menu.MenuType;
 
 public class AdminConsole {
+    private final Menu menu;
+    private final DeliveryManager deliveryManager;
+    private final Scanner sc;
 
-    public static void start(Scanner scanner, Menu menu, DeliveryManager deliveryManager) {
-    	
-        int choice;
-        
-        do {
-                System.out.println("1. Add new cuisine");
-                System.out.println("2. Add food item");
-                System.out.println("3. Remove cuisine (and food items)");
-                System.out.println("4. Remove food item by ID");
-                System.out.println("5. Add delivery partner");
-                System.out.println("6. Remove delivery partner by name");
-                System.out.println("7. Exit");
-                System.out.print("Enter choice: ");
-                choice = sc.nextInt();
-                sc.nextLine(); 
-
-                switch (choice) {
-                    case 1: 
-                    	addCuisine(scanner);
-                    	break;
-                    case 2:
-                    	addFoodItem(scanner, menu);
-                    	break;
-                    case 3:
-                    	removeCuisine(scanner, menu);
-                    	break;
-                    case 4:
-                    	removeFoodItem(scanner, menu);
-                    	break;
-                    case 5:
-                    	addDeliveryPartner(scanner, deliveryManager);
-                    	break;
-                    case 6: 
-                    	removeDeliveryPartner(scanner, deliveryManager);
-                    	break;
-                }
-            
-        } while(choice != 7);
+    public AdminConsole(Menu menu, DeliveryManager deliveryManager, Scanner sc) {
+        this.menu = menu;
+        this.deliveryManager = deliveryManager;
+        this.sc = sc;
     }
 
-    private static void addCuisine(Scanner scanner) {
-        System.out.print("Enter new cuisine name: ");
-        String input = scanner.nextLine().trim().toUpperCase();
+    public void launch() {
+        AdminService adminService = new AdminService();
+
+        System.out.print("Enter admin username: ");
+        String username = sc.nextLine();
+        System.out.print("Enter password: ");
+        String password = sc.nextLine();
+
+        if (!adminService.login(username, password)) {
+            System.out.println("\nLogin failed!");
+            return;
+        }
+
+        System.out.println("\nWelcome Admin!");
+
+        boolean back = false;
+        while (!back) {
+            System.out.println("\n--- Admin Menu ---");
+            System.out.println("1. Add Food Item");
+            System.out.println("2. Remove Food Item");
+            System.out.println("3. Add Delivery Partner");
+            System.out.println("4. Remove Delivery Partner");
+            System.out.println("5. View All Menu Items");
+            System.out.println("6. Exit Admin Panel");
+            System.out.print("\nEnter choice: ");
+            int choice = Integer.parseInt(sc.nextLine());
+
+            switch (choice) {
+                case 1:
+                	addFoodItem();
+                	break;
+                case 2:
+                	removeFoodItem();
+                	break;
+                case 3:
+                	addDeliveryPartner();
+                	break;
+                case 4:
+                	removeDeliveryPartner();
+                	break;
+                case 5:
+                	menu.displayAll();
+                	break;
+                case 6:
+                	back = true;
+                	break;
+              
+            }
+        }
+    }
+
+    private void addFoodItem() {
         try {
-            MenuType newType = MenuType.valueOf(input);
-            System.out.println("Cuisine already exists: " + newType);
-        } catch (IllegalArgumentException e) {
-            MenuType newCuisine = Enum.valueOf(MenuType.class, input);
-            System.out.println("New cuisine added: " + newCuisine);
-            // Note: Java enums are static, you can't truly "add" at runtime
-            System.out.println("But enums cannot be modified at runtime — add it to code for persistence.");
+
+            System.out.print("Enter food name: ");
+            String name = sc.nextLine();
+
+            System.out.print("Enter price: ");
+            double price = Double.parseDouble(sc.nextLine());
+
+            System.out.print("Enter menu type (e.g., Indian): ");
+            String menuTypeName = sc.nextLine();
+
+            System.out.print("Enter food category (e.g., MainCourse): ");
+            String foodTypeName = sc.nextLine();
+
+            IMenuType menuType = () -> menuTypeName;
+            IFoodType foodType = () -> foodTypeName;
+
+            if (menu.containsItem(name, menuType, foodType)) {
+                System.out.println("\nA food item with this name and type already exists in this category.");
+                return;
+            }
+
+            menu.addItem(new FoodItem(name, price, foodType, menuType));
+            System.out.println("\nItem added successfully.");
+        } catch (Exception e) {
+            System.out.println("\nFailed to add item: " + e.getMessage());
         }
     }
 
-    private static void addFoodItem(Scanner scanner, Menu menu) {
-        System.out.print("Enter ID: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
 
-        System.out.print("Enter item name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter price: ");
-        double price = scanner.nextDouble();
-        scanner.nextLine();
-
-        System.out.println("Choose Food Type:");
-        for (FoodType type : FoodType.values()) {
-            System.out.println("- " + type);
-        }
-        System.out.print("Enter food type: ");
-        FoodType foodType = FoodType.valueOf(scanner.nextLine().toUpperCase());
-
-        FoodItem item = new FoodItem(id, name, price, foodType);
-        menu.addItem(item);
-        System.out.println("✅ Food item added.");
-    }
-
-    private static void removeCuisine(Scanner scanner, Menu menu) {
-        System.out.print("Enter cuisine keyword (e.g., INDIAN, ITALIAN): ");
-        String cuisineKey = scanner.nextLine().toUpperCase();
-
-        int before = menu.getAllItems().size();
-        menu.getAllItems().removeIf(item -> item.getName().toUpperCase().contains(cuisineKey));
-        int after = menu.getAllItems().size();
-        System.out.println("✅ Removed " + (before - after) + " items from cuisine: " + cuisineKey);
-    }
-
-    private static void removeFoodItem(Scanner scanner, Menu menu) {
-        System.out.print("Enter Food Item ID to remove: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
-        boolean removed = menu.getAllItems().removeIf(item -> item.getId() == id);
+    private void removeFoodItem() {
+        menu.displayAll();
+        System.out.print("\nEnter ID of item to remove: ");
+        int id = Integer.parseInt(sc.nextLine());
+        boolean removed = menu.removeItemById(id);
         if (removed) {
-            System.out.println("✅ Item removed.");
+            System.out.println("\nItem removed.");
         } else {
-            System.out.println("❌ Item not found.");
+            System.out.println("\nItem not found.");
         }
     }
 
-    private static void addDeliveryPartner(Scanner scanner, DeliveryManager manager) {
-        System.out.print("Enter partner name: ");
-        String name = scanner.nextLine();
+    private void addDeliveryPartner() {
+        System.out.print("\nEnter delivery partner name: ");
+        String name = sc.nextLine();
+        System.out.print("Type (1. Swiggy  2. Zomato): ");
+        int type = Integer.parseInt(sc.nextLine());
 
-        System.out.print("Choose type (1. Swiggy  2. Zomato): ");
-        int type = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (type) {
-            case 1 -> manager.getAgents().add(new SwiggyAgent(name));
-            case 2 -> manager.getAgents().add(new ZomatoAgent(name));
-            default -> System.out.println("Invalid type.");
+        IDeliveryAgent agent;
+        if (type == 1) {
+            agent = new SwiggyAgent(name);
+        } else if (type == 2) {
+            agent = new ZomatoAgent(name);
+        } else {
+            System.out.println("\nInvalid type");
+            return;
         }
-        System.out.println("✅ Delivery partner added.");
+
+        deliveryManager.getAgents().add(agent);
+        List<IDeliveryAgent> deliveryAgents = deliveryManager.getAgents();
+        for(IDeliveryAgent deliveryAgent : deliveryAgents) {
+        	System.out.println(deliveryAgent.getName());
+        }
+        System.out.println("\nDelivery partner added.");
     }
 
-    private static void removeDeliveryPartner(Scanner scanner, DeliveryManager manager) {
-        System.out.print("Enter partner name to remove: ");
-        String name = scanner.nextLine();
-
-        boolean removed = manager.getAgents().removeIf(agent -> agent.getName().equalsIgnoreCase(name));
-        if (removed) {
-            System.out.println("✅ Partner removed.");
+    private void removeDeliveryPartner() {
+        var agents = deliveryManager.getAgents();
+        for (int i = 0; i < agents.size(); i++) {
+            System.out.println((i + 1) + ". " + agents.get(i).getName());
+        }
+        System.out.print("Enter number to remove: ");
+        int index = Integer.parseInt(sc.nextLine());
+        if (index >= 1 && index <= agents.size()) {
+            agents.remove(index - 1);
+            System.out.println("\nPartner removed.");
         } else {
-            System.out.println("❌ Partner not found.");
+            System.out.println("\nInvalid index");
         }
     }
 }

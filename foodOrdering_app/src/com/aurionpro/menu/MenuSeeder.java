@@ -4,53 +4,36 @@ public class MenuSeeder {
     public static void main(String[] args) {
         Menu menu = new Menu();
 
-        // INDIAN
-        menu.addItem(new FoodItem(1, "INDIAN", "Samosa", 20, FoodType.STARTER));
-        menu.addItem(new FoodItem(2, "INDIAN", "Paneer Tikka", 60, FoodType.STARTER));
-        menu.addItem(new FoodItem(3, "INDIAN", "Chicken Pakora", 70, FoodType.STARTER));
-        menu.addItem(new FoodItem(4, "INDIAN", "Aloo Chaat", 40, FoodType.STARTER));
-        menu.addItem(new FoodItem(5, "INDIAN", "Veg Spring Roll", 50, FoodType.STARTER));
-
-        menu.addItem(new FoodItem(6, "INDIAN", "Butter Chicken", 180, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(7, "INDIAN", "Paneer Butter Masala", 160, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(8, "INDIAN", "Rogan Josh", 200, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(9, "INDIAN", "Chole Bhature", 120, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(10, "INDIAN", "Biryani", 150, FoodType.MAIN_COURSE));
-
-        menu.addItem(new FoodItem(11, "INDIAN", "Gulab Jamun", 50, FoodType.DESSERT));
-        menu.addItem(new FoodItem(12, "INDIAN", "Rasgulla", 45, FoodType.DESSERT));
-        menu.addItem(new FoodItem(13, "INDIAN", "Jalebi", 40, FoodType.DESSERT));
-        menu.addItem(new FoodItem(14, "INDIAN", "Kheer", 55, FoodType.DESSERT));
-        menu.addItem(new FoodItem(15, "INDIAN", "Kulfi", 60, FoodType.DESSERT));
+     // INDIAN
+        menu.addItem(new FoodItem("Butter Chicken", 180, new MainCourseFood(), new IndianMenu()));
+        menu.addItem(new FoodItem("Gulab Jamun", 50, new DessertFood(), new IndianMenu()));
+        menu.addItem(new FoodItem("Paneer Tikka", 160, new StarterFood(), new IndianMenu()));
+        menu.addItem(new FoodItem("Biryani", 200, new MainCourseFood(), new IndianMenu()));
+        menu.addItem(new FoodItem("Tandoori Chicken", 190, new StarterFood(), new IndianMenu()));
+        menu.addItem(new FoodItem("Dal Makhani", 150, new MainCourseFood(), new IndianMenu()));
+        menu.addItem(new FoodItem("Rasgulla", 60, new DessertFood(), new IndianMenu()));
+        menu.addItem(new FoodItem("Samosa", 25, new StarterFood(), new IndianMenu()));
 
         // ITALIAN
-        menu.addItem(new FoodItem(16, "ITALIAN", "Bruschetta", 100, FoodType.STARTER));
-        menu.addItem(new FoodItem(17, "ITALIAN", "Caprese Salad", 120, FoodType.STARTER));
-        menu.addItem(new FoodItem(18, "ITALIAN", "Stuffed Mushrooms", 130, FoodType.STARTER));
-        menu.addItem(new FoodItem(19, "ITALIAN", "Arancini", 110, FoodType.STARTER));
+        menu.addItem(new FoodItem("Margherita Pizza", 250, new MainCourseFood(), new ItalianMenu()));
+        menu.addItem(new FoodItem("Spaghetti Carbonara", 300, new MainCourseFood(), new ItalianMenu()));
+        menu.addItem(new FoodItem("Bruschetta", 120, new StarterFood(), new ItalianMenu()));
+        menu.addItem(new FoodItem("Tiramisu", 180, new DessertFood(), new ItalianMenu()));
+        menu.addItem(new FoodItem("Lasagna", 280, new MainCourseFood(), new ItalianMenu()));
+        menu.addItem(new FoodItem("Caprese Salad", 140, new StarterFood(), new ItalianMenu()));
+        menu.addItem(new FoodItem("Cannoli", 160, new DessertFood(), new ItalianMenu()));
+        menu.addItem(new FoodItem("Panna Cotta", 170, new DessertFood(), new ItalianMenu()));
 
-        menu.addItem(new FoodItem(20, "ITALIAN", "Fettuccine Alfredo", 270, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(21, "ITALIAN", "Lasagna", 300, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(22, "ITALIAN", "Spaghetti Carbonara", 260, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(23, "ITALIAN", "Risotto alla Milanese", 280, FoodType.MAIN_COURSE));
+        // CHINESE
+        menu.addItem(new FoodItem("Kung Pao Chicken", 220, new MainCourseFood(), new ChineseMenu()));
+        menu.addItem(new FoodItem("Spring Rolls", 100, new StarterFood(), new ChineseMenu()));
+        menu.addItem(new FoodItem("Fried Rice", 180, new MainCourseFood(), new ChineseMenu()));
+        menu.addItem(new FoodItem("Mango Pudding", 150, new DessertFood(), new ChineseMenu()));
+        menu.addItem(new FoodItem("Sweet and Sour Pork", 240, new MainCourseFood(), new ChineseMenu()));
+        menu.addItem(new FoodItem("Dumplings", 120, new StarterFood(), new ChineseMenu()));
+        menu.addItem(new FoodItem("Chow Mein", 200, new MainCourseFood(), new ChineseMenu()));
+        menu.addItem(new FoodItem("Sesame Balls", 130, new DessertFood(), new ChineseMenu()));
 
-        menu.addItem(new FoodItem(24, "ITALIAN", "Panna Cotta", 150, FoodType.DESSERT));
-        menu.addItem(new FoodItem(25, "ITALIAN", "Cannoli", 140, FoodType.DESSERT));
-        menu.addItem(new FoodItem(26, "ITALIAN", "Gelato", 130, FoodType.DESSERT));
-        menu.addItem(new FoodItem(27, "ITALIAN", "Zabaione", 145, FoodType.DESSERT));
-
-        // CHINESE	
-        menu.addItem(new FoodItem(28, "CHINESE", "Spring Rolls", 80, FoodType.STARTER));
-        menu.addItem(new FoodItem(29, "CHINESE", "Hot and Sour Soup", 90, FoodType.STARTER));
-        menu.addItem(new FoodItem(30, "CHINESE", "Chicken Lollipop", 120, FoodType.STARTER));
-        menu.addItem(new FoodItem(31, "CHINESE", "Wonton Soup", 100, FoodType.STARTER));
-
-        menu.addItem(new FoodItem(32, "CHINESE", "Fried Rice", 140, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(33, "CHINESE", "Kung Pao Chicken", 180, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(34, "CHINESE", "Hakka Noodles", 150, FoodType.MAIN_COURSE));
-        menu.addItem(new FoodItem(35, "CHINESE", "Szechuan Tofu", 160, FoodType.MAIN_COURSE));
-
-        menu.addItem(new FoodItem(36, "CHINESE", "Mango Pudding", 120, FoodType.DESSERT));
 
         // Save to file
         menu.saveToFile("menu");

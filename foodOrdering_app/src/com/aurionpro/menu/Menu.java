@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Menu implements Serializable {
 
@@ -38,41 +37,64 @@ public class Menu implements Serializable {
 	}
 
 	public void displayAll() {
-		System.out.printf("\n%-5s %-20s %-10s %-15s\n", "ID", "Name", "Price", "Food Type");
-		System.out.println("--------------------------------------------------------");
+		System.out.printf("\n%-5s %-20s %-10s %-15s %-15s\n", "ID", "Name", "Price", "Food Type", "Cuisine");
+		System.out.println("----------------------------------------------------------------");
 		for (FoodItem item : foodItems) {
 			System.out.printf(
-	                "%-5d %-20s ₹%-9.2f %-15s\n",
-	                item.getFoodItemId(),
+	                "%-5d %-20s ₹%-9.2f %-15s %-15s\n",
+	                item.getId(),
 	                item.getName(),
 	                item.getPrice(),
-	                item.getfoodType()
+	                item.getFoodType().getCategoryName(),
+	                item.getMenuType().getTypeName()
 	            );
 
 		}
 	}
 	
 	public void displayByCuisine(String selectedCuisine) {
-		System.out.printf("\n%-5s %-20s %-10s %-15s\n", "ID", "Name", "Price", "Food Type");
-		System.out.println("--------------------------------------------------------");
+		System.out.printf("\n%-5s %-20s %-10s %-15s %-15s\n", "ID", "Name", "Price", "Food Type", "Cuisine");
+		System.out.println("----------------------------------------------------------------");
 		for(FoodItem item : foodItems) {
-			String itemCuisine = item.getCuisine();
+			String itemCuisine = item.getMenuType().getTypeName();
 			if(itemCuisine != null && itemCuisine.equalsIgnoreCase(selectedCuisine)) {
 				System.out.printf(
-		                "%-5d %-20s ₹%-9.2f %-15s\n",
-		                item.getFoodItemId(),
+		                "%-5d %-20s ₹%-9.2f %-15s %-15s\n",
+		                item.getId(),
 		                item.getName(),
 		                item.getPrice(),
-		                item.getfoodType()
+		                item.getFoodType().getCategoryName(),
+		                item.getMenuType().getTypeName()
 		            );
 
 			}
 		}
 	}
+	
+	public boolean containsItem(String name, IMenuType menuType, IFoodType foodType) {
+	    for (FoodItem item : foodItems) {
+	        if (item.getName().equalsIgnoreCase(name)
+	                && item.getMenuType().getTypeName().equalsIgnoreCase(menuType.getTypeName())
+	                && item.getFoodType().getCategoryName().equalsIgnoreCase(foodType.getCategoryName())) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
+	public boolean removeItemById(int id) {
+	    for (int i = 0; i < foodItems.size(); i++) {
+	        if (foodItems.get(i).getId() == id) {
+	            foodItems.remove(i);
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 
 	public FoodItem getItemById(int id) {
 		for (FoodItem item : foodItems) {
-			if (item.getFoodItemId() == id)
+			if (item.getId() == id)
 				return item;
 		}
 		return null;
@@ -88,7 +110,16 @@ public class Menu implements Serializable {
 
 	public static Menu loadFromFile(String filename) {
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-			return (Menu) ois.readObject();
+			 Menu loadedMenu = (Menu) ois.readObject();
+			int maxId = 0;
+			for (FoodItem item : loadedMenu.foodItems) {
+			    if (item.getId() > maxId) {
+			        maxId = item.getId();
+			    }
+			}
+			FoodItem.setStartingId(maxId + 1);
+			return loadedMenu;
+
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("No saved menu found, starting fresh.");
 			return new Menu();

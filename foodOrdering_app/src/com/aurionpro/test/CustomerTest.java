@@ -1,9 +1,8 @@
 package com.aurionpro.test;
 
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
+import com.aurionpro.admin.AdminConsole;
 import com.aurionpro.customer.Customer;
 import com.aurionpro.customer.CustomerDatabase;
 import com.aurionpro.delivery.DeliveryManager;
@@ -23,6 +22,7 @@ public class CustomerTest {
 
 	private static final String MENU_FILE = "menu";
 	private static final String CUSTOMER_FILE = "customers";
+	private static final String DELIVERY_AGENTS_FILE = "agents";
 
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
@@ -30,11 +30,23 @@ public class CustomerTest {
 		// Load data
 		Menu menu = Menu.loadFromFile(MENU_FILE);
 		CustomerDatabase customerDB = CustomerDatabase.loadFromFile(CUSTOMER_FILE);
-		DeliveryManager deliveryManager = new DeliveryManager();
+		DeliveryManager deliveryManager = DeliveryManager.loadFromFile(DELIVERY_AGENTS_FILE);
 		IDiscountService discountService = new FlatDiscountService(500, 50);
 		InvoiceService invoiceService = new InvoiceService();
 
 		System.out.println("-----Welcome to Food Ordering App-----");
+		System.out.println("\n1. Admin");
+		System.out.println("2. Customer");
+		System.out.print("\nEnter choice: ");
+		int entry = Integer.parseInt(scanner.nextLine());
+
+		if (entry == 1) {
+		    new AdminConsole(menu, deliveryManager, scanner).launch();
+		    menu.saveToFile(MENU_FILE);
+		    customerDB.saveToFile(CUSTOMER_FILE);
+		    deliveryManager.saveToFile(DELIVERY_AGENTS_FILE);
+		    return;
+		}
 
 		System.out.print("\nEnter your name: ");
 		String name = scanner.nextLine();
@@ -86,7 +98,7 @@ public class CustomerTest {
 					menu.displayAll();
 					break;
 				}
-				;
+				
 
 				break;
 
@@ -125,7 +137,6 @@ public class CustomerTest {
 				scanner.nextLine();
 
 				IPaymentService paymentService = null;
-				boolean paymentValid = false;
 				
 				switch (payOption) {
 				case 1:
@@ -177,8 +188,10 @@ public class CustomerTest {
 
 			}
 		} while (choice != 4);
-
+		
 		menu.saveToFile(MENU_FILE);
 		customerDB.saveToFile(CUSTOMER_FILE);
+		deliveryManager.saveToFile(DELIVERY_AGENTS_FILE);
+
 	}
 }

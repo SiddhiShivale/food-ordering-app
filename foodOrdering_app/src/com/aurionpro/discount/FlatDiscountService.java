@@ -12,7 +12,7 @@ public class FlatDiscountService implements IDiscountService{
 
 	@Override
 	public double applyDiscount(double totalAmount) {
-	    if (totalAmount > threshold) {
+	    if (totalAmount >= threshold) {
 	        return discountAmount;
 	    }
 	    return 0;

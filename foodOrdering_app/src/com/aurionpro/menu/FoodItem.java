@@ -2,37 +2,25 @@ package com.aurionpro.menu;
 
 import java.io.Serializable;
 
-public class FoodItem implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	private int foodItemId;
-	private String cuisine;
+public class FoodItem implements Serializable {
+
+	private static int idCounter = 1;
+	private int id;
 	private String name;
 	private double price;
-	private FoodType foodType;
+	private IFoodType foodType;
+	private IMenuType menuType;
 
-	public int getFoodItemId() {
-		return foodItemId;
+	public int getId() {
+		return id;
 	}
-
-	public void setFoodItemId(int foodItemId) {
-		this.foodItemId = foodItemId;
-	}
-
+	
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public String getCuisine() {
-		return cuisine;
-	}
-
-	public void setCuisine(String cuisine) {
-		this.cuisine = cuisine;
 	}
 
 	public double getPrice() {
@@ -43,34 +31,43 @@ public class FoodItem implements Serializable{
 		this.price = price;
 	}
 
-	public FoodType getfoodType() {
+	public IFoodType getFoodType() {
 		return foodType;
 	}
 
-	public void setfoodType(FoodType foodType) {
+	public void setFoodType(IFoodType foodType) {
 		this.foodType = foodType;
 	}
 
-	
-	public FoodItem() {
-		super();
+	public IMenuType getMenuType() {
+		return menuType;
 	}
 
-	public FoodItem(int foodItemId, String cuisine, String name, double price, FoodType foodType) {
+	public void setMenuType(IMenuType menuType) {
+		this.menuType = menuType;
+	}
+
+	public FoodItem(String name, double price, IFoodType foodType, IMenuType menuType) {
 		super();
-		this.foodItemId = foodItemId;
-		this.cuisine = cuisine;
+		this.id = idCounter++;
 		this.name = name;
 		this.price = price;
 		this.foodType = foodType;
+		this.menuType = menuType;
 	}
+
+	public FoodItem() {
+		super();
+	}
+	
+	public static void setStartingId(int startFrom) {
+        idCounter = startFrom;
+    }
 
 	@Override
 	public String toString() {
-		return "FoodItem [foodItemId=" + foodItemId + ", cuisine=" + cuisine + ", name=" + name + ", price=" + price
-				+ ", foodType=" + foodType + "]";
+		return "FoodItem [id=" + id + ", name=" + name + ", price=" + price + ", foodType=" + foodType + ", menuType="
+				+ menuType + "]";
 	}
 
-	
-	
 }

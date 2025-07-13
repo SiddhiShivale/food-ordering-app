@@ -1,13 +1,17 @@
 package com.aurionpro.invoice;
 
+import com.aurionpro.delivery.DeliveryManager;
 import com.aurionpro.delivery.IDeliveryAgent;
 import com.aurionpro.order.Order;
 import com.aurionpro.order.OrderItem;
 import com.aurionpro.payment.IPaymentService;
 
 public class InvoiceService {
+	private static final String DELIVERY_AGENTS_FILE = "agents";
+	DeliveryManager deliveryManager = DeliveryManager.loadFromFile(DELIVERY_AGENTS_FILE);
 
     public void printInvoice(Order order, double discount, double totalAfterDiscount, IPaymentService paymentService) {
+    	
         System.out.println("\n========== INVOICE ==========");
         for (OrderItem item : order.getItems()) {
             System.out.printf("%-20s x%-2d = ₹%.2f\n",
