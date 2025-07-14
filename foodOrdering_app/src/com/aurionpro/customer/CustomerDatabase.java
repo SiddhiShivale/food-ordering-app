@@ -1,7 +1,14 @@
 package com.aurionpro.customer;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CustomerDatabase implements Serializable {
@@ -20,6 +27,10 @@ public class CustomerDatabase implements Serializable {
     public Customer getCustomer(String name) {
         return customers.get(name);
     }
+    
+    public List<Customer> getAllCustomers() {
+        return new ArrayList<>(customers.values());
+    }  
 
     public boolean exists(String name) {
         return customers.containsKey(name);

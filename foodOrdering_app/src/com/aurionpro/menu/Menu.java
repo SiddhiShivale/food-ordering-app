@@ -13,13 +13,13 @@ public class Menu implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private List<FoodItem> foodItems;
-	private MenuType menuType;
+	private IMenuType menuType;
 
 	public List<FoodItem> getFoodItems() {
 		return foodItems;
 	}
 
-	public MenuType getMenuType() {
+	public IMenuType getMenuType() {
 		return menuType;
 	}
 

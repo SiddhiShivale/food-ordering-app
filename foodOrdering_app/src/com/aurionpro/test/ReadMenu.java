@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 
 public class ReadMenu {
     public static void main(String[] args) {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("menu"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("customers"))) {
             Object obj = ois.readObject();
             System.out.println("Deserialized object: " + obj);
         } catch (IOException | ClassNotFoundException e) {

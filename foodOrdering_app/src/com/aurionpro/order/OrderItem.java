@@ -26,5 +26,10 @@ public class OrderItem implements Serializable {
 	public int getQuantity() {
 	    return quantity;
 	}
+	
+	public void setQuantity(int quantity) {
+	    this.quantity = quantity;
+	}
+
 }
 
